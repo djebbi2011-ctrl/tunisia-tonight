@@ -1,0 +1,358 @@
+// ============================================================
+// Tunisia Tonight — Schéma Prisma
+// Base de données : PostgreSQL
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================
+// ENUMS
+// ============================================================
+
+enum Role {
+  CLIENT
+  HOTELIER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum ReservationStatus {
+  PENDING_PAYMENT    // En attente paiement commission
+  PAID               // Commission payée, en attente validation hôtel
+  VALIDATED          // Validé par l'hôtelier
+  REFUSED            // Refusé par l'hôtelier
+  CANCELLED          // Annulé
+  COMPLETED          // Séjour terminé
+}
+
+enum ContractStatus {
+  DRAFT
+  ACTIVE
+  EXPIRED
+  SUSPENDED
+}
+
+enum PaymentMethod {
+  CARD
+  D17
+  KONNECT
+  PAYMEE
+  BANK_TRANSFER
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  REFUNDED
+}
+
+enum MealPlan {
+  ROOM_ONLY         // Sans repas
+  BREAKFAST         // Petit-déjeuner
+  HALF_BOARD        // Demi-pension
+  FULL_BOARD        // Pension complète
+  ALL_INCLUSIVE     // Tout inclus
+}
+
+enum NotificationType {
+  RESERVATION_NEW
+  RESERVATION_VALIDATED
+  RESERVATION_REFUSED
+  RESERVATION_CANCELLED
+  PAYMENT_SUCCESS
+  DISCOUNT_ALERT
+  SYSTEM
+}
+
+// ============================================================
+// USERS
+// ============================================================
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  passwordHash  String    @map("password_hash")
+  role          Role      @default(CLIENT)
+  firstName     String?   @map("first_name")
+  lastName      String?   @map("last_name")
+  phone         String?
+  cinPassport   String?   @map("cin_passport")
+  isActive      Boolean   @default(true) @map("is_active")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  hotel         Hotel?         @relation("HotelierUser")
+  reservations  Reservation[]
+  discounts     Discount[]     @relation("HotelierDiscounts")
+  notifications Notification[]
+  refreshTokens RefreshToken[]
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String   @map("user_id")
+  expiresAt DateTime @map("expires_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("refresh_tokens")
+}
+
+// ============================================================
+// HOTELS
+// ============================================================
+
+model Hotel {
+  id           String   @id @default(uuid())
+  name         String
+  stars        Int      @default(3)
+  city         String
+  region       String?
+  address      String?
+  latitude     Float?
+  longitude    Float?
+  description  String?
+  phone        String?
+  email        String?
+  website      String?
+  amenities    Json     @default("[]")  // ["piscine", "spa", "wifi", "parking", "plage", ...]
+  photos       String[] @default([])
+  isActive     Boolean  @default(true) @map("is_active")
+  hotelierUserId String? @unique @map("hotelier_user_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  hotelier     User?         @relation("HotelierUser", fields: [hotelierUserId], references: [id])
+  roomTypes    RoomType[]
+  contracts    Contract[]
+  reservations Reservation[]
+
+  @@map("hotels")
+}
+
+model RoomType {
+  id            String   @id @default(uuid())
+  hotelId       String   @map("hotel_id")
+  name          String                          // "Standard", "Supérieure", "Vue mer", "Junior Suite"
+  description   String?
+  capacity      Int      @default(2)            // Nombre de personnes max
+  bedType       String?  @map("bed_type")       // "Double", "Twin", "King"
+  viewType      String?  @map("view_type")      // "Jardin", "Piscine", "Mer"
+  photos        String[] @default([])
+  amenities     Json     @default("[]")
+  isActive      Boolean  @default(true) @map("is_active")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  // Relations
+  hotel         Hotel          @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  contractRates ContractRate[]
+  availabilities Availability[]
+  reservations  Reservation[]
+
+  @@map("room_types")
+}
+
+// ============================================================
+// CONTRACTS & RATES
+// ============================================================
+
+model Contract {
+  id            String         @id @default(uuid())
+  hotelId       String         @map("hotel_id")
+  label         String                            // "Été 2026", "Hiver 2026-2027"
+  seasonStart   DateTime       @map("season_start")
+  seasonEnd     DateTime       @map("season_end")
+  status        ContractStatus @default(DRAFT)
+  fileUrl       String?        @map("file_url")  // URL S3 du PDF uploadé
+  notes         String?
+  uploadedById  String?        @map("uploaded_by_id")
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+
+  // Relations
+  hotel         Hotel          @relation(fields: [hotelId], references: [id], onDelete: Cascade)
+  rates         ContractRate[]
+
+  @@map("contracts")
+}
+
+model ContractRate {
+  id              String   @id @default(uuid())
+  contractId      String   @map("contract_id")
+  roomTypeId      String   @map("room_type_id")
+  mealPlan        MealPlan @default(BREAKFAST) @map("meal_plan")
+  basePriceTnd    Float    @map("base_price_tnd")   // Tarif de base en TND
+  commissionPct   Float    @default(8) @map("commission_pct") // % commission Tunisia Tonight
+  minStay         Int      @default(1) @map("min_stay")       // Durée minimum en nuits
+  childDiscount   Float    @default(0) @map("child_discount") // % réduction enfant
+  isActive        Boolean  @default(true) @map("is_active")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  // Relations
+  contract        Contract  @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  roomType        RoomType  @relation(fields: [roomTypeId], references: [id], onDelete: Cascade)
+
+  @@unique([contractId, roomTypeId, mealPlan])
+  @@map("contract_rates")
+}
+
+// ============================================================
+// AVAILABILITIES (mis à jour en temps réel)
+// ============================================================
+
+model Availability {
+  id             String   @id @default(uuid())
+  roomTypeId     String   @map("room_type_id")
+  date           DateTime @db.Date
+  totalRooms     Int      @default(0) @map("total_rooms")
+  availableRooms Int      @default(0) @map("available_rooms")
+  isClosed       Boolean  @default(false) @map("is_closed")  // stop-sell
+  overridePrice  Float?   @map("override_price")             // Prix override (si différent contrat)
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  roomType       RoomType @relation(fields: [roomTypeId], references: [id], onDelete: Cascade)
+
+  @@unique([roomTypeId, date])
+  @@index([roomTypeId, date])     // Index critique pour la recherche
+  @@map("availabilities")
+}
+
+// ============================================================
+// RESERVATIONS
+// ============================================================
+
+model Reservation {
+  id                String            @id @default(uuid())
+  reference         String            @unique  // Ex: TN-2847
+  clientId          String            @map("client_id")
+  hotelId           String            @map("hotel_id")
+  roomTypeId        String            @map("room_type_id")
+  contractRateId    String?           @map("contract_rate_id")
+  checkin           DateTime          @db.Date
+  checkout          DateTime          @db.Date
+  nights            Int
+  adults            Int               @default(2)
+  children          Int               @default(0)
+  childrenAges      Int[]             @map("children_ages")
+  mealPlan          MealPlan          @default(BREAKFAST) @map("meal_plan")
+  specialRequests   String?           @map("special_requests")
+  status            ReservationStatus @default(PENDING_PAYMENT)
+  contractPriceTnd  Float             @map("contract_price_tnd")   // Tarif contrat de base
+  commissionTnd     Float             @map("commission_tnd")        // Commission TN collectée
+  totalTnd          Float             @map("total_tnd")             // Total séjour (avant remise)
+  validatedAt       DateTime?         @map("validated_at")
+  validatedBy       String?           @map("validated_by")         // ID hôtelier
+  refusedReason     String?           @map("refused_reason")
+  voucherUrl        String?           @map("voucher_url")          // PDF bon de réservation
+  createdAt         DateTime          @default(now()) @map("created_at")
+  updatedAt         DateTime          @updatedAt @map("updated_at")
+
+  // Relations
+  client            User              @relation(fields: [clientId], references: [id])
+  hotel             Hotel             @relation(fields: [hotelId], references: [id])
+  roomType          RoomType          @relation(fields: [roomTypeId], references: [id])
+  discount          Discount?
+  payment           Payment?
+
+  @@index([hotelId, status, checkin])   // Index extranet hôtelier
+  @@map("reservations")
+}
+
+// ============================================================
+// DISCOUNTS — Journal remises (VISIBLE ADMIN UNIQUEMENT)
+// ============================================================
+
+model Discount {
+  id                String   @id @default(uuid())
+  reservationId     String   @unique @map("reservation_id")
+  hotelierId        String   @map("hotelier_id")      // Qui a accordé la remise
+  discountPct       Float    @default(0) @map("discount_pct")    // % remise
+  discountTnd       Float    @default(0) @map("discount_tnd")    // Montant TND
+  netPriceTnd       Float    @map("net_price_tnd")               // Prix net après remise
+  commissionImpact  Float    @map("commission_impact")           // Impact sur commission TN
+  notes             String?                                       // Raison de la remise
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  // Relations
+  reservation       Reservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  hotelier          User        @relation("HotelierDiscounts", fields: [hotelierId], references: [id])
+
+  @@index([reservationId, createdAt])   // Index journal admin
+  @@map("discounts")
+}
+
+// ============================================================
+// PAYMENTS
+// ============================================================
+
+model Payment {
+  id              String        @id @default(uuid())
+  reservationId   String        @unique @map("reservation_id")
+  amountTnd       Float         @map("amount_tnd")
+  method          PaymentMethod @default(CARD)
+  gatewayRef      String?       @map("gateway_ref")   // Référence Paymee/Konnect
+  gatewayPayload  Json?         @map("gateway_payload")
+  status          PaymentStatus @default(PENDING)
+  paidAt          DateTime?     @map("paid_at")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  // Relations
+  reservation     Reservation   @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+// ============================================================
+// NOTIFICATIONS
+// ============================================================
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String           @map("user_id")
+  type      NotificationType
+  title     String
+  message   String
+  payload   Json             @default("{}")
+  isRead    Boolean          @default(false) @map("is_read")
+  createdAt DateTime         @default(now()) @map("created_at")
+
+  // Relations
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, isRead, createdAt])
+  @@map("notifications")
+}
+
+// ============================================================
+// REVIEWS
+// ============================================================
+
+model Review {
+  id            String   @id @default(uuid())
+  reservationId String   @unique @map("reservation_id")
+  clientId      String   @map("client_id")
+  hotelId       String   @map("hotel_id")
+  rating        Int                           // 1–5
+  comment       String?
+  isPublished   Boolean  @default(false) @map("is_published")
+  hotelResponse String?  @map("hotel_response")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@map("reviews")
+}

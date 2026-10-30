@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tunisia Tonight — Présentation Design</title>
+<style>
+  :root {
+    --navy: #0B1628;
+    --navy2: #162847;
+    --gold: #F0A030;
+    --gold2: #E8882A;
+    --ivory: #FFF8F0;
+    --ivory2: #F5ECE0;
+    --text: #0B1628;
+    --muted: #6B7A94;
+    --white: #FFFFFF;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #F0ECE5;
+    color: var(--text);
+  }
+
+  /* ── HEADER ── */
+  .page-header {
+    background: var(--navy);
+    color: white;
+    padding: 60px 40px 80px;
+    text-align: center;
+  }
+  .logo-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .logo-moon {
+    width: 48px; height: 48px;
+    background: var(--gold);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+  }
+  .logo-text { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
+  .logo-text span { color: var(--gold); }
+  .page-header h1 { font-size: 42px; font-weight: 800; letter-spacing: -1px; margin-bottom: 12px; }
+  .page-header h1 em { color: var(--gold); font-style: normal; }
+  .page-header p { color: rgba(255,255,255,0.6); font-size: 18px; }
+
+  /* ── SECTION ── */
+  .section { padding: 60px 40px; max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--gold2);
+    margin-bottom: 8px;
+  }
+  .section-title { font-size: 32px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 40px; }
+
+  /* ── COLOR PALETTE ── */
+  .palette-grid { display: flex; gap: 24px; flex-wrap: wrap; }
+  .color-card {
+    flex: 1; min-width: 220px;
+    border-radius: 20px; overflow: hidden;
+    box-shadow: 0 8px 32px rgba(11,22,40,0.15);
+  }
+  .color-swatch { height: 140px; display: flex; align-items: flex-end; padding: 16px; }
+  .color-swatch-inner { padding: 6px 12px; border-radius: 8px; background: rgba(255,255,255,0.15); }
+  .color-swatch-inner span { font-size: 13px; font-weight: 600; }
+  .color-info { background: white; padding: 20px; }
+  .color-name { font-size: 17px; font-weight: 700; margin-bottom: 4px; }
+  .color-hex { font-size: 13px; color: var(--muted); font-family: monospace; margin-bottom: 8px; }
+  .color-use { font-size: 13px; color: var(--text); line-height: 1.5; }
+
+  /* ── MOBILE MOCKUPS ── */
+  .phones-row {
+    display: flex; gap: 32px; justify-content: center; flex-wrap: wrap;
+    padding: 40px 0;
+  }
+  .phone-wrapper { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .phone-label {
+    font-size: 12px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--muted);
+  }
+  .phone {
+    width: 260px; height: 520px;
+    background: var(--navy);
+    border-radius: 36px;
+    padding: 12px;
+    box-shadow:
+      0 0 0 2px rgba(255,255,255,0.15),
+      0 24px 48px rgba(11,22,40,0.35),
+      inset 0 0 0 1px rgba(255,255,255,0.05);
+    position: relative;
+    overflow: hidden;
+  }
+  .phone-screen {
+    width: 100%; height: 100%;
+    border-radius: 28px;
+    overflow: hidden;
+    background: var(--ivory);
+    position: relative;
+  }
+  .phone-notch {
+    position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+    width: 80px; height: 26px;
+    background: var(--navy);
+    border-radius: 0 0 16px 16px;
+    z-index: 10;
+  }
+
+  /* Screen 1 — Homepage */
+  .s-hero {
+    background: var(--navy);
+    padding: 32px 16px 20px;
+    min-height: 170px;
+  }
+  .s-logo { font-size: 12px; font-weight: 700; color: var(--gold); letter-spacing: 1px; margin-bottom: 8px; }
+  .s-hero h2 { font-size: 18px; font-weight: 800; color: white; line-height: 1.2; margin-bottom: 6px; }
+  .s-hero h2 em { color: var(--gold); font-style: normal; }
+  .s-hero p { font-size: 10px; color: rgba(255,255,255,0.5); }
+
+  .s-tabs { display: flex; gap: 4px; padding: 10px 12px; background: var(--navy2); }
+  .s-tab {
+    flex: 1; text-align: center; padding: 5px 2px; border-radius: 8px;
+    font-size: 9px; font-weight: 600; color: rgba(255,255,255,0.5);
+  }
+  .s-tab.active { background: var(--gold); color: white; }
+
+  .s-search {
+    margin: 10px 12px;
+    background: white;
+    border-radius: 14px;
+    padding: 10px 12px;
+    box-shadow: 0 4px 16px rgba(11,22,40,0.12);
+  }
+  .s-search-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .s-search-row:last-child { margin-bottom: 0; }
+  .s-icon { font-size: 14px; }
+  .s-search-field {
+    flex: 1; font-size: 10px; color: var(--muted);
+    border-bottom: 1px solid #F0ECE5; padding-bottom: 4px;
+  }
+  .s-search-field strong { display: block; font-size: 11px; color: var(--text); font-weight: 600; }
+  .s-btn {
+    background: var(--gold);
+    color: white; border: none; border-radius: 10px;
+    padding: 8px 14px; font-size: 10px; font-weight: 700;
+    cursor: pointer; width: calc(100% - 24px); margin: 8px 12px;
+    display: block; text-align: center;
+  }
+
+  .s-offers-title { font-size: 11px; font-weight: 700; padding: 4px 12px 6px; color: var(--text); }
+  .s-offer-cards { display: flex; gap: 8px; padding: 0 12px 12px; overflow: hidden; }
+  .s-offer-card {
+    flex: 0 0 100px; height: 80px; border-radius: 14px;
+    display: flex; flex-direction: column; justify-content: flex-end;
+    padding: 8px; color: white; position: relative; overflow: hidden;
+  }
+  .s-offer-card em { position: absolute; top: 8px; right: 8px; font-size: 18px; font-style: normal; }
+  .s-offer-card strong { font-size: 9px; font-weight: 700; line-height: 1.2; }
+  .s-offer-card span { font-size: 8px; opacity: 0.7; }
+  .card-night { background: linear-gradient(135deg, #0B1628 0%, #1E3A5F 100%); }
+  .card-day { background: linear-gradient(135deg, #0066CC 0%, #0099FF 100%); }
+  .card-mystery { background: linear-gradient(135deg, #6A0DAD 0%, #9B30D0 100%); }
+
+  /* Screen 2 — Résultats */
+  .s-results-header {
+    background: var(--navy);
+    padding: 28px 12px 12px;
+  }
+  .s-back { font-size: 9px; color: var(--gold); margin-bottom: 6px; }
+  .s-results-title { font-size: 15px; font-weight: 800; color: white; }
+  .s-results-sub { font-size: 9px; color: rgba(255,255,255,0.5); }
+  .s-hotel-card {
+    background: white; margin: 8px 10px; border-radius: 14px;
+    overflow: hidden; box-shadow: 0 2px 8px rgba(11,22,40,0.08);
+  }
+  .s-hotel-img {
+    height: 70px; background: linear-gradient(135deg, #1E3A5F, #0B1628);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .s-hotel-img-text { font-size: 28px; opacity: 0.3; }
+  .s-hotel-stars {
+    position: absolute; top: 6px; left: 8px;
+    background: rgba(0,0,0,0.5); color: var(--gold);
+    font-size: 9px; padding: 2px 6px; border-radius: 6px;
+  }
+  .s-hotel-info { padding: 8px 10px; }
+  .s-hotel-name { font-size: 11px; font-weight: 700; margin-bottom: 2px; }
+  .s-hotel-city { font-size: 9px; color: var(--muted); margin-bottom: 6px; }
+  .s-hotel-price { display: flex; justify-content: space-between; align-items: flex-end; }
+  .s-commission { font-size: 9px; color: var(--muted); }
+  .s-commission strong { display: block; font-size: 11px; font-weight: 700; color: var(--gold2); }
+  .s-total { font-size: 14px; font-weight: 800; color: var(--navy); }
+  .s-total small { font-size: 8px; color: var(--muted); display: block; font-weight: 400; }
+
+  /* Screen 3 — Réservation */
+  .s-booking-header {
+    background: var(--navy);
+    padding: 28px 12px 14px;
+  }
+  .s-booking-title { font-size: 15px; font-weight: 800; color: white; margin-bottom: 2px; }
+  .s-booking-sub { font-size: 9px; color: rgba(255,255,255,0.5); }
+
+  .s-steps { display: flex; gap: 0; margin: 10px 12px; }
+  .s-step {
+    flex: 1; text-align: center; padding: 5px 0;
+    font-size: 9px; font-weight: 600; color: var(--muted);
+    border-bottom: 2px solid #F0ECE5;
+  }
+  .s-step.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .s-step.done { color: var(--navy); border-bottom-color: var(--navy); }
+
+  .s-summary-card {
+    background: white; margin: 6px 10px; border-radius: 12px;
+    padding: 10px 12px; box-shadow: 0 2px 8px rgba(11,22,40,0.08);
+  }
+  .s-summary-row {
+    display: flex; justify-content: space-between;
+    font-size: 10px; padding: 4px 0;
+    border-bottom: 1px solid #F5ECE0;
+  }
+  .s-summary-row:last-child { border-bottom: none; }
+  .s-summary-row.total { font-weight: 700; font-size: 11px; }
+  .s-summary-row span { color: var(--muted); }
+  .s-summary-row strong { color: var(--text); }
+  .s-highlight { background: #FFF3E0; border-radius: 10px; padding: 8px 10px; margin: 0 10px; }
+  .s-highlight-title { font-size: 9px; font-weight: 700; color: var(--gold2); margin-bottom: 4px; }
+  .s-highlight-amount { font-size: 20px; font-weight: 800; color: var(--navy); }
+  .s-highlight-sub { font-size: 8px; color: var(--muted); }
+  .s-pay-btn {
+    background: var(--gold); color: white;
+    font-size: 11px; font-weight: 700; border-radius: 12px;
+    padding: 10px; margin: 8px 10px; text-align: center;
+    box-shadow: 0 4px 12px rgba(240,160,48,0.4);
+  }
+
+  /* ── WEB MOCKUP ── */
+  .web-mockup {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 16px 48px rgba(11,22,40,0.2);
+    max-width: 900px; margin: 0 auto;
+  }
+  .browser-bar {
+    background: #F5F5F5; padding: 10px 16px;
+    display: flex; align-items: center; gap: 8px;
+    border-bottom: 1px solid #E0E0E0;
+  }
+  .browser-dots span {
+    display: inline-block; width: 10px; height: 10px;
+    border-radius: 50%; margin-right: 4px;
+  }
+  .dot-r { background: #FF5F57; }
+  .dot-y { background: #FEBC2E; }
+  .dot-g { background: #28C840; }
+  .browser-url {
+    flex: 1; background: white; border: 1px solid #E0E0E0;
+    border-radius: 6px; padding: 4px 12px; font-size: 12px; color: #666;
+  }
+  .web-nav {
+    background: var(--navy); display: flex;
+    align-items: center; padding: 0 32px; height: 54px; gap: 32px;
+  }
+  .web-nav-logo { font-size: 16px; font-weight: 800; color: white; }
+  .web-nav-logo span { color: var(--gold); }
+  .web-nav-links { display: flex; gap: 20px; flex: 1; }
+  .web-nav-link { font-size: 13px; color: rgba(255,255,255,0.6); }
+  .web-nav-link.active { color: white; }
+  .web-nav-cta {
+    background: var(--gold); color: white;
+    padding: 6px 16px; border-radius: 8px; font-size: 13px; font-weight: 600;
+  }
+  .web-hero {
+    background: var(--navy); padding: 48px 48px 32px; position: relative;
+    overflow: hidden;
+  }
+  .web-hero-tag { font-size: 11px; font-weight: 700; color: var(--gold); letter-spacing: 2px; margin-bottom: 10px; }
+  .web-hero h2 { font-size: 36px; font-weight: 800; color: white; line-height: 1.1; margin-bottom: 10px; }
+  .web-hero h2 em { color: var(--gold); font-style: normal; }
+  .web-hero p { font-size: 14px; color: rgba(255,255,255,0.55); max-width: 420px; margin-bottom: 28px; }
+  .web-product-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+  .web-product-tab {
+    padding: 7px 16px; border-radius: 20px; font-size: 12px; font-weight: 600;
+    color: rgba(255,255,255,0.5); border: 1px solid rgba(255,255,255,0.15);
+  }
+  .web-product-tab.active { background: var(--gold); color: white; border-color: var(--gold); }
+  .web-search-box {
+    background: white; border-radius: 16px; padding: 16px;
+    display: flex; gap: 12px; align-items: flex-end;
+    max-width: 640px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  }
+  .web-search-field { flex: 1; }
+  .web-search-field label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 3px; }
+  .web-search-field input {
+    width: 100%; font-size: 13px; color: var(--text);
+    border: none; border-bottom: 1.5px solid #E8E0D8; padding-bottom: 4px;
+    background: transparent; outline: none;
+  }
+  .web-search-btn {
+    background: var(--gold); color: white;
+    padding: 10px 20px; border-radius: 10px; font-size: 13px; font-weight: 700;
+    white-space: nowrap; box-shadow: 0 4px 12px rgba(240,160,48,0.35);
+  }
+  .web-cards-section { padding: 32px 48px; background: var(--ivory); }
+  .web-cards { display: flex; gap: 16px; }
+  .web-card {
+    flex: 1; border-radius: 16px; overflow: hidden;
+    box-shadow: 0 4px 16px rgba(11,22,40,0.1);
+  }
+  .web-card-img {
+    height: 100px; display: flex; align-items: center; justify-content: center;
+    font-size: 36px;
+  }
+  .wc-night { background: linear-gradient(135deg, #0B1628, #1E3A5F); }
+  .wc-day { background: linear-gradient(135deg, #0055AA, #0088CC); }
+  .wc-mystery { background: linear-gradient(135deg, #5A0A9A, #8B20C8); }
+  .web-card-body { background: white; padding: 14px 16px; }
+  .web-card-body h4 { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .web-card-body p { font-size: 11px; color: var(--muted); line-height: 1.4; }
+
+  /* ── TYPOGRAPHY ── */
+  .typo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .typo-card { background: white; border-radius: 16px; padding: 28px; box-shadow: 0 2px 12px rgba(11,22,40,0.07); }
+  .typo-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+
+  /* ── FOOTER ── */
+  .presentation-footer {
+    background: var(--navy); color: rgba(255,255,255,0.4);
+    padding: 32px 40px; text-align: center; font-size: 13px;
+    margin-top: 60px;
+  }
+  .presentation-footer strong { color: var(--gold); }
+
+  .divider { height: 1px; background: rgba(11,22,40,0.08); margin: 0 40px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="page-header">
+  <div class="logo-mark">
+    <div class="logo-moon">🌙</div>
+    <div class="logo-text">Tunisia <span>Tonight</span></div>
+  </div>
+  <h1>Charte graphique &amp; <em>Design</em></h1>
+  <p>Identité visuelle — Application mobile &amp; Web</p>
+</header>
+
+<!-- PALETTE -->
+<div class="section">
+  <p class="section-label">01 — Couleurs</p>
+  <h2 class="section-title">Les 3 couleurs signatures</h2>
+  <div class="palette-grid">
+
+    <div class="color-card">
+      <div class="color-swatch" style="background:#0B1628;">
+        <div class="color-swatch-inner"><span style="color:rgba(255,255,255,0.8);">#0B1628</span></div>
+      </div>
+      <div class="color-info">
+        <div class="color-name">Bleu Nuit</div>
+        <div class="color-hex">Midnight Navy · #0B1628</div>
+        <div class="color-use">Arrière-plans, navigation, textes principaux. Le ciel nocturne tunisien — autorité et confiance.</div>
+      </div>
+    </div>
+
+    <div class="color-card">
+      <div class="color-swatch" style="background:#F0A030;">
+        <div class="color-swatch-inner"><span style="color:rgba(0,0,0,0.7);">#F0A030</span></div>
+      </div>
+      <div class="color-info">
+        <div class="color-name">Or Safran</div>
+        <div class="color-hex">Saffron Gold · #F0A030</div>
+        <div class="color-use">CTA, accents, prix, badges actifs. La chaleur tunisienne — soleil couchant sur la Méditerranée.</div>
+      </div>
+    </div>
+
+    <div class="color-card">
+      <div class="color-swatch" style="background:#FFF8F0;">
+        <div class="color-swatch-inner"><span style="color:rgba(11,22,40,0.4);">#FFF8F0</span></div>
+      </div>
+      <div class="color-info">
+        <div class="color-name">Ivoire</div>
+        <div class="color-hex">Ivory Sand · #FFF8F0</div>
+        <div class="color-use">Fonds de page, cartes, espaces blancs. Le jasmin et le marbre tunisien — luxe discret.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- MOBILE MOCKUPS -->
+<div class="section">
+  <p class="section-label">02 — Application mobile</p>
+  <h2 class="section-title">3 écrans principaux</h2>
+  <div class="phones-row">
+
+    <!-- Screen 1: Accueil -->
+    <div class="phone-wrapper">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="s-hero">
+            <div class="s-logo">🌙 TUNISIA TONIGHT</div>
+            <h2>Réservez <em>ce soir</em><br>en Tunisie.</h2>
+            <p>Chambres, day pass, séjours mystère</p>
+          </div>
+          <div class="s-tabs">
+            <div class="s-tab active">🌙 Nuit</div>
+            <div class="s-tab">☀️ Day Pass</div>
+            <div class="s-tab">🎁 Mystère</div>
+          </div>
+          <div class="s-search">
+            <div class="s-search-row">
+              <span class="s-icon">📍</span>
+              <div class="s-search-field">
+                <strong>Hammamet</strong>
+                <span>Destination</span>
+              </div>
+            </div>
+            <div class="s-search-row">
+              <span class="s-icon">📅</span>
+              <div class="s-search-field">
+                <strong>Ce soir</strong>
+                <span>Date</span>
+              </div>
+              <span class="s-icon">👥</span>
+              <div class="s-search-field">
+                <strong>2 pers.</strong>
+                <span>Voyageurs</span>
+              </div>
+            </div>
+          </div>
+          <div class="s-btn">Chercher les offres →</div>
+          <div class="s-offers-title">Offres du moment</div>
+          <div class="s-offer-cards">
+            <div class="s-offer-card card-night">
+              <em>🌙</em>
+              <strong>Nuit DM</strong>
+              <span>Dès 89 TND</span>
+            </div>
+            <div class="s-offer-card card-day">
+              <em>☀️</em>
+              <strong>Day Pass</strong>
+              <span>Dès 35 TND</span>
+            </div>
+            <div class="s-offer-card card-mystery">
+              <em>🎁</em>
+              <strong>Mystère</strong>
+              <span>Prix fixe</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">Accueil</div>
+    </div>
+
+    <!-- Screen 2: Résultats -->
+    <div class="phone-wrapper">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="s-results-header">
+            <div class="s-back">← Retour</div>
+            <div class="s-results-title">🌙 Nuits dernière minute</div>
+            <div class="s-results-sub">Hammamet · Ce soir · 2 pers.</div>
+          </div>
+          <div style="background:#F5ECE0; height: 6px;"></div>
+
+          <div class="s-hotel-card">
+            <div class="s-hotel-img">
+              <span class="s-hotel-img-text">🏨</span>
+              <div class="s-hotel-stars">★★★★★</div>
+            </div>
+            <div class="s-hotel-info">
+              <div class="s-hotel-name">Barceló Monastir</div>
+              <div class="s-hotel-city">📍 Monastir</div>
+              <div class="s-hotel-price">
+                <div class="s-commission">
+                  Commission TN
+                  <strong>42 TND</strong>
+                </div>
+                <div class="s-total">
+                  <small>Total estimé</small>
+                  231 TND
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="s-hotel-card">
+            <div class="s-hotel-img" style="background: linear-gradient(135deg, #1A3060, #0D1F40);">
+              <span class="s-hotel-img-text">🌊</span>
+              <div class="s-hotel-stars">★★★★</div>
+            </div>
+            <div class="s-hotel-info">
+              <div class="s-hotel-name">Club Hammamet Beach</div>
+              <div class="s-hotel-city">📍 Hammamet</div>
+              <div class="s-hotel-price">
+                <div class="s-commission">
+                  Commission TN
+                  <strong>28 TND</strong>
+                </div>
+                <div class="s-total">
+                  <small>Total estimé</small>
+                  176 TND
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="text-align:center; padding: 10px; font-size:10px; color:var(--muted);">
+            + 4 autres établissements
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">Résultats</div>
+    </div>
+
+    <!-- Screen 3: Réservation -->
+    <div class="phone-wrapper">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="s-booking-header">
+            <div class="s-back">← Barceló Monastir</div>
+            <div class="s-booking-title">Réservation</div>
+            <div class="s-booking-sub">Chambre Standard · 1 nuit</div>
+          </div>
+          <div class="s-steps">
+            <div class="s-step done">✓ Séjour</div>
+            <div class="s-step done">✓ Identité</div>
+            <div class="s-step active">Paiement</div>
+          </div>
+
+          <div class="s-summary-card">
+            <div class="s-summary-row">
+              <span>Prix contrat</span>
+              <strong>189 TND</strong>
+            </div>
+            <div class="s-summary-row">
+              <span>À régler à l'hôtel</span>
+              <strong>189 TND</strong>
+            </div>
+          </div>
+
+          <div class="s-highlight">
+            <div class="s-highlight-title">💳 À payer maintenant — Tunisia Tonight</div>
+            <div class="s-highlight-amount">42 TND</div>
+            <div class="s-highlight-sub">Commission plateforme en dinars</div>
+          </div>
+
+          <div class="s-pay-btn">
+            Payer 42 TND maintenant →
+          </div>
+
+          <div style="text-align:center; padding: 6px; font-size:9px; color:var(--muted);">
+            🔒 Paiement sécurisé · Konnect / Paymee
+          </div>
+        </div>
+      </div>
+      <div class="phone-label">Paiement</div>
+    </div>
+
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- WEB MOCKUP -->
+<div class="section">
+  <p class="section-label">03 — Version Web</p>
+  <h2 class="section-title">Page d'accueil tunisiatonight.com</h2>
+
+  <div class="web-mockup">
+    <div class="browser-bar">
+      <div class="browser-dots">
+        <span class="dot-r"></span>
+        <span class="dot-y"></span>
+        <span class="dot-g"></span>
+      </div>
+      <div class="browser-url">tunisiatonight.com</div>
+    </div>
+
+    <nav class="web-nav">
+      <div class="web-nav-logo">🌙 Tunisia <span>Tonight</span></div>
+      <div class="web-nav-links">
+        <span class="web-nav-link active">Nuits</span>
+        <span class="web-nav-link">Day Pass</span>
+        <span class="web-nav-link">Mystère</span>
+        <span class="web-nav-link">Hôteliers</span>
+      </div>
+      <div class="web-nav-cta">Connexion</div>
+    </nav>
+
+    <div class="web-hero">
+      <div class="web-hero-tag">🌙 TUNISIA TONIGHT</div>
+      <h2>Vos prochaines heures<br>en Tunisie, réservées <em>maintenant.</em></h2>
+      <p>Nuits de dernière minute, day pass piscine &amp; spa, séjours mystère — aux meilleurs tarifs négociés en dinars.</p>
+      <div class="web-product-tabs">
+        <div class="web-product-tab active">🌙 Nuit dernière minute</div>
+        <div class="web-product-tab">☀️ Day Pass</div>
+        <div class="web-product-tab">🎁 Séjour Mystère</div>
+      </div>
+      <div class="web-search-box">
+        <div class="web-search-field">
+          <label>Destination</label>
+          <input type="text" value="Hammamet" readonly>
+        </div>
+        <div class="web-search-field">
+          <label>Date</label>
+          <input type="text" value="Ce soir" readonly>
+        </div>
+        <div class="web-search-field" style="max-width:90px;">
+          <label>Personnes</label>
+          <input type="text" value="2 pers." readonly>
+        </div>
+        <div class="web-search-btn">Chercher →</div>
+      </div>
+    </div>
+
+    <div class="web-cards-section">
+      <div class="web-cards">
+        <div class="web-card">
+          <div class="web-card-img wc-night">🌙</div>
+          <div class="web-card-body">
+            <h4>Nuit dernière minute</h4>
+            <p>Chambres disponibles ce soir à prix réduit</p>
+          </div>
+        </div>
+        <div class="web-card">
+          <div class="web-card-img wc-day">☀️</div>
+          <div class="web-card-body">
+            <h4>Day Pass</h4>
+            <p>Piscine, spa, plage — sans dormir à l'hôtel</p>
+          </div>
+        </div>
+        <div class="web-card">
+          <div class="web-card-img wc-mystery">🎁</div>
+          <div class="web-card-body">
+            <h4>Séjour Mystère</h4>
+            <p>L'hôtel révélé 48h avant — région au choix</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="divider"></div>
+
+<!-- TYPOGRAPHY -->
+<div class="section">
+  <p class="section-label">04 — Typographie</p>
+  <h2 class="section-title">Hiérarchie des textes</h2>
+  <div class="typo-grid">
+    <div class="typo-card">
+      <div class="typo-label">Titre principal</div>
+      <div style="font-size:32px; font-weight:800; color:var(--navy); letter-spacing:-1px; line-height:1.1;">
+        Réservez <span style="color:var(--gold);">ce soir</span><br>en Tunisie.
+      </div>
+    </div>
+    <div class="typo-card">
+      <div class="typo-label">Prix &amp; chiffres clés</div>
+      <div style="display:flex; gap:20px; align-items:flex-end;">
+        <div>
+          <div style="font-size:11px; color:var(--muted);">Commission</div>
+          <div style="font-size:32px; font-weight:800; color:var(--gold);">42 TND</div>
+        </div>
+        <div>
+          <div style="font-size:11px; color:var(--muted);">Total hôtel</div>
+          <div style="font-size:32px; font-weight:800; color:var(--navy);">189 TND</div>
+        </div>
+      </div>
+    </div>
+    <div class="typo-card">
+      <div class="typo-label">Boutons &amp; Actions</div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div style="background:var(--gold); color:white; padding:12px 20px; border-radius:12px; font-weight:700; text-align:center; font-size:14px; box-shadow:0 4px 12px rgba(240,160,48,0.4);">Payer 42 TND maintenant →</div>
+        <div style="background:var(--navy); color:white; padding:12px 20px; border-radius:12px; font-weight:700; text-align:center; font-size:14px;">Accéder à l'extranet</div>
+        <div style="background:var(--ivory2); color:var(--navy); padding:12px 20px; border-radius:12px; font-weight:600; text-align:center; font-size:14px; border:1px solid #E8DDD0;">Voir les résultats</div>
+      </div>
+    </div>
+    <div class="typo-card">
+      <div class="typo-label">Badges statuts</div>
+      <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:4px;">
+        <span style="background:#E8F5E9; color:#2E7D32; padding:5px 12px; border-radius:20px; font-size:12px; font-weight:600;">✓ Validé</span>
+        <span style="background:#FFF3E0; color:var(--gold2); padding:5px 12px; border-radius:20px; font-size:12px; font-weight:600;">⏳ En attente</span>
+        <span style="background:#E3F2FD; color:#1565C0; padding:5px 12px; border-radius:20px; font-size:12px; font-weight:600;">💳 Payé</span>
+        <span style="background:#FCE4EC; color:#C62828; padding:5px 12px; border-radius:20px; font-size:12px; font-weight:600;">✗ Refusé</span>
+        <span style="background:#EDE7F6; color:#4527A0; padding:5px 12px; border-radius:20px; font-size:12px; font-weight:600;">🎁 Mystère</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="presentation-footer">
+  <strong>Tunisia Tonight</strong> — Présentation design confidentielle · 2026<br>
+  Réalisée avec Claude · tunisiatonight.com
+</div>
+
+</body>
+</html>
