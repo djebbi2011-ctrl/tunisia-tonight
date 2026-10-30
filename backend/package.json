@@ -1,7 +1,7 @@
-﻿{
+{
   "name": "tunisiatonight-backend",
   "version": "0.1.0",
-  "description": "Tunisia Tonight — API Backend (NestJS)",
+  "description": "Tunisia Tonight - API Backend (NestJS)",
   "scripts": {
     "build": "nest build",
     "start": "node dist/main",
